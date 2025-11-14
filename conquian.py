@@ -44,8 +44,37 @@ def optimal_meld(self, hand, top_card):
     
     best = []
     best_count = 0
+
+# Zachary Fauver
+##Funtion requires a helper funtion that determines if a card can be melded
+def force_meld(self, current_draw):
+    """ Determines if the player(self) should force their opponent to take the 
+    card (current_draw)
+    
+    Args:
+        current_draw (card): the information about the current card
+    Returns
+        decision: True if the player decides to force the meld
+                    False if the player does not force the meld
+        """
+    #checks if the card can be melded first, needs to know the current card and
+    # the opponents hand
+    can_be_forced = self.check_if_meldable(current_draw, self.opponent)
+    if can_be_forced == False:
+        return False
+    
+    #forcing opponent to meld may help them win by reducing their hand size
+    # this function will only force meld if the oponent has a large hand 
+    # >=6 cards and if the player's hand is <=4 so that a meld should
+    # only be forced when wining 
+    
+    decision = False
+    if len(self.opponent.hand) >= 8 and len(self.hand) <=4 :
+         decision = True
+    return decision
     
     
 # Amon Bayu
 # Sean Liu
+
 
