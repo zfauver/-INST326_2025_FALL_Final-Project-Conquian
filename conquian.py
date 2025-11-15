@@ -77,6 +77,51 @@ def force_meld(self, current_draw):
     
     
 # Amon Bayu
+def valid_play(self, available_cards, existing_melds, remaining_cards):
+    """
+    Checks if card can be played by changing, rearanging, or building new melds
+   
+    Args:
+        avaliable_cards (list): A list of card strings in the player's hand.
+        existing_melds (list): A list of melds. Each meld is a list of card strings.
+        remaining_cards (list): The card we want to check for playability.
+    
+    Returns:
+        tuple: 
+            played_card (str): The card that was played.
+            updated_melds (list): The updated list of melds after the play.
+    """
+    ranks = {}
+    for c in available_cards:
+        rank = c[:-1]
+        if rank not in ranks:
+            ranks[rank] = []
+        ranks[rank].append(c)
+        
+        if len (ranks[rank]) == 3:
+            new_meld = ranks[rank]
+            return (new_meld[0], new_meld + existing_melds)
+    suits = {}
+    for c in available_cards:
+        suit = c[1]
+        if suit not in suits:
+            suits[suit] = []
+        suits[suit].append(c)
+
+        if len(suits[s]) == 3:
+            new_meld = suits[s]
+            return (new_meld[0], new_meld + existing_melds)
+        
+    for meld in existing_melds:
+        if len(meld) >= 4:
+            borrowed_card = meld[0]
+            new_meld = [borrowed_card] + available_cards[:2]
+            updated_melds = [m for m in existing_melds if m != meld]
+            updated_melds.append(new_meld)
+            updated_melds.append(meld[1:])
+            return (borrowed_card, updated_melds)
+        
+    return (available_cards[0], existing_melds)
 # Sean Liu
 def check_if_meldable(current_draw, opposing_player):
     VALUES = {'A':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, 'J':8, 'Q':9, 'K':10}
@@ -102,4 +147,5 @@ def check_if_meldable(current_draw, opposing_player):
                 card_val = VALUES[current_draw[0]]
                 if card_val == values[0] - 1 or card_val == values[-1] + 1:
                     return True
+
     return False
