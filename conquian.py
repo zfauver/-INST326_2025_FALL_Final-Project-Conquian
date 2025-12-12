@@ -212,6 +212,42 @@ class Player:
                         return True
 
         return False
+        
+def meld_from_hand(self):
+        
+        melds = []
+        rank = {} # Checks for sets
+        
+        for c in self.hand:
+            if c[0] not in rank:
+                rank[c[0]] = []
+            rank[c[0]].append(c)
+        
+        for group in rank.values():
+            if len(group) >= 3:
+                melds.append(group[:3])
+        
+        suit = {} # Checks for runs
+        
+        for c in self.hand:
+            if c[1] not in suit:
+                suit[c[1]] = []
+            suit[c[1]].append(c)
+        
+        for group in suit.values():
+            group.sort(key=lambda c: VALUES[c[0]])
+
+            for i in range(len(group)):
+                run = [group[i]]
+                for j in range(i+1, len(group)):
+                    if VALUES[group[j][0]] == VALUES[run[-1][0]] + 1:
+                        run.append(group[j])
+                    else:
+                        break
+                if len(run) >= 3:
+                    melds.append(run)
+        
+        return melds    
 
 
 #game class
@@ -256,6 +292,7 @@ class Conquian:
         cpu.opponent = player1
         self.players = [player1, cpu]
         self.stock = self.deck[20:]
+        
     def use_force_meld(self,player,card):
         """ Forces the opponent to meld a card
          
@@ -296,8 +333,6 @@ class Conquian:
                 player.hand.remove(card)
                 
                 
-        
-    
     def game_state(self):
         """
         
@@ -333,69 +368,128 @@ class Conquian:
             print(f"\n{player.name}'s turn")
             self.game_state()
             
-            draw = self.stock.pop(0)
-            print(f"{player.name} drew {draw}")
-            player.hand.append(draw)
+            draw = None
             
             if player.name == "player1": #player1 choice to meld
-                choice = input(f"Do you want to meld {draw}? " 
+                if self.discard_pile:
+                    print(f"\nTop discard: {self.discard_pile[-1]}")
+                    choice = input("Take a card from stock (s) or discard pile? (d)? ").strip().lower()
+                    if choice == 'd':
+                        draw = self.discard_pile.pop()
+                        print(f"You drew {draw} from the discard pile.")
+                        play, update = player.valid_play(player.hand, player.melds, draw)
+                        if play:
+                            player.melds = update
+                            for c in update[-1]:
+                                if c in player.hand:
+                                    player.hand.remove(c)
+                            print(f"You melded {update[-1]}")
+                        else:
+                            print("Not a valid meld.")
+                            self.discard_pile.append(draw)
+                            draw = None
+                if draw is None:
+                    draw = self.stock.pop(0)
+                    print(f"\nYou drew {draw}")
+            else:
+                if self.discard_pile:
+                    top_discard = self.discard_pile[-1]
+                    play, update = player.valid_play(player.hand, player.melds, top_discard)
+                    if play:
+                        draw = self.discard_pile.pop()
+                        print(f"CPU took {draw} from the discard pile.")
+                        player.melds = update
+                        for c in update[-1]:
+                            if c in player.hand:
+                                player.hand.remove(c)
+                        print(f"CPU melded {update[-1]}")
+                    else:
+                        draw = self.stock.pop(0)
+                        print(f"CPU drew {draw} from the stock.")
+                else:
+                    draw = self.stock.pop(0)
+                    print(f"CPU drew {draw} from the stock.")
+            
+            if draw and draw not in [c for meld in player.melds for c in meld]:
+                if player.name == "player1":
+                    hand_melds = player.meld_from_hand()    
+                    if hand_melds:
+                        print(f"\nYou can create melds from your hand: {hand_melds}")
+                        meld_hand = input("Meld from hand? (y/n): ").strip().lower()
+                        if meld_hand == 'y':
+                            for meld in hand_melds:
+                                print(f"Melding {meld}")
+                                player.melds.append(meld)
+                                for c in meld:
+                                    if c in player.hand:
+                                        player.hand.remove(c)
+                    play, update = player.valid_play(player.hand, player.melds, draw)
+                    
+                    if play:  
+                        choice = input(f"Do you want to meld {draw}? " 
                                f"(y/n)").strip().lower()
-                if choice == "y":
-                    play, update = player.valid_play(player.hand, player.melds,
-                                                     draw)
+                        if choice == "y":
+                            player.melds = update
+                            for c in update[-1]:
+                                if c in player.hand:
+                                    player.hand.remove(c)
+                            print(f"You melded {update[-1]}")
+                        else:
+                            if player.opponent.force_meld(draw):
+                                print(f"\n{player.opponent.name} forces you to meld.")
+                                self.use_force_meld(player.opponent, draw)
+                            else:
+                                self.discard_pile.append(draw)
+                                print(f"{draw} discarded")
+                    else:
+                        self.discard_pile.append(draw)
+                        print(f"Cannot meld {draw}, discarding")
+                        
+                    if player.hand:
+                        while True:
+                            discard = input(f"\nChoose a card to discard from hand {player.hand}: ").strip().upper()
+                            if discard in player.hand:
+                                player.hand.remove(discard)
+                                self.discard_pile.append(discard)
+                                print(f"{discard} discarded")
+                                break
+                            else:
+                                print("Invalid card")
+                else: # CPU
+                    hand_melds = player.meld_from_hand()
+                    if hand_melds:
+                        meld = hand_melds[0]
+                        print(f"CPU melded {meld}")
+                        player.melds.append(meld)
+                        for c in meld:
+                            if c in player.hand:
+                                player.hand.remove(c)
+                    
+                    play, update = player.valid_play(player.hand, player.melds, draw)
+                    
                     if play:
                         player.melds = update
                         for c in update[-1]:
                             if c in player.hand:
                                 player.hand.remove(c)
-                        print(f"You melded {update[-1]}")
-                    else:
-                        print("No valid meld found, discarding")
-                        self.discard_pile.append(draw)
-                        player.hand.remove(draw)
-                else:
-                    #if a player doesnt want to med, this checks 
-                    # if the oppnent can force a meld
-                    if player.force_meld(draw):
-                        self.use_force_meld(player, draw)
-                    
-                    #discards the card
+                        print(f"CPU melded {update[-1]}")
                     else:
                         self.discard_pile.append(draw)
-                        player.hand.remove(draw)
+                        print(f"CPU discarded {draw}")
                     
-            
-                if player.hand: #player1 discard
-                    while True:
-                        discard = input(f"Choose a card to discard from your hand "
-                                    f"{player.hand}: ").strip().upper()
-                        if discard in player.hand:
-                            player.hand.remove(discard)
-                            self.discard_pile.append(discard)
-                            break
-                        else:
-                            print("Invalid card")
-            else: #cpu
-                meld, used_top = player.optimal_meld(player.hand, draw)
-                if meld:
-                    player.melds.append(meld)
-                    for c in meld:
-                        if c in player.hand:
-                            player.hand.remove(c)
-                    print(f"CPU melded {meld}")
-                else:
-                    discard = player.hand.pop(0)
-                    self.discard_pile.append(discard)
-                    print(f"CPU discarded {discard}")    
-            
+                    if player.hand:
+                        discard = player.hand.pop(0)
+                        self.discard_pile.append(discard)
+                        print(f"CPU discarded {discard} from hand")
+               
+               
             if self.win_condition(player):
                 print(f"{player.name} wins!")
                 return
             turn = 1 - turn # switch between cpu and player turn
 
-        print("Stock exhausted. Tie.")
+        print("\nStock exhausted. Tie.")
     
 if __name__ == "__main__":
     game = Conquian()
     game.run()
-    
