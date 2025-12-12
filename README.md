@@ -10,16 +10,19 @@ Expalnation of each file:
 - read.me: The
 
 Running the game:
-- python conquian.py
-- input 
+- Command: python conquian.py
+- terminal inputs:
+  - y/n for melding a card, if the card is not meldable the game will not let you meld the card
+  - the card you would like to meld needs to be inputed
 Clear instructions on how to run your program from the command line. You do not need to explain how to run the program on Windows and on MacOS; just pick one. If your program takes command-line arguments, please document the command-line interface (which arguments are required? which are optional, if any? what data types are you looking for? are there a specific format for data files? etc.)
 
 Clear instructions on how to use your program and/or interpret the output of the program. Anything the user might encounter while using your program that a random person on the street would not find self-explanatory needs to be explained in your instructions.
 
 
-
-An annotated bibliography of all sources you used to develop your project, including sources of data, sources of background information about your project topic, and sources about Python programming that informed specific aspects of your code. For each source, explain how you used the source. You do not need to cite any INST 326 course materials.
-
+Bibliography:
+- "Conquian." Bicycle Cards, https://bicyclecards.com/how-to-play/conquian
+  - Used to learn the rules of the game and decide what functions need to be implemented in order to make a functioning version of the game
+  
 Attribution: in order to evaluate whether each member has made a substantial, original contribution to the project, please provide a table like the one below, with a separate row for each method or function.
 
 Method/function	Primary author 	Techniques demonstrated
