@@ -257,12 +257,45 @@ class Conquian:
         self.players = [player1, cpu]
         self.stock = self.deck[20:]
     def use_force_meld(self,player,card):
-        """
+        """ Forces the opponent to meld a card
          
         player: 
         card: 
         """
-        pass
+        opponent = player.opponent
+        melded = False
+        
+        #iterates through opponent melds to determine
+        # where the card can be melded
+        for meld in opponent.melds:
+            #using the 0 index we 
+            # check if the card fits within a set 
+            # (A, 2-7, J,Q, or K)
+            if meld[0][0] == card[0]:
+                meld.append(card)
+                melded = True
+                break
+            #checks if the card fits into a run with the same suit   
+            # and has sequential values
+            elif meld[0][1] == card[1]:
+                vals = [VALUES[c[0]] for c in meld]
+                card_val = VALUES[card[0]]
+                
+                #determines if the card is in sequence by checkong if
+                #the value is 1 above or 1 below
+                if card_val == min(vals) - 1 or card_val == max(vals) +1:
+                    meld.append(card)
+                    #sorts the run
+                    meld.sort(key=lambda x: VALUES[x[0]])
+                    melded = True
+                    break
+        if melded:
+            print(f"Force meld used:\n"
+                      f"{card} was forced into {opponent.name}'s deck")
+            if card in player.hand:
+                player.hand.remove(card)
+                
+                
         
     
     def game_state(self):
@@ -321,16 +354,27 @@ class Conquian:
                         self.discard_pile.append(draw)
                         player.hand.remove(draw)
                 else:
-                    self.discard_pile.append(draw)
-                    player.hand.remove(draw)
+                    #if a player doesnt want to med, this checks 
+                    # if the oppnent can force a meld
+                    if player.force_meld(draw):
+                        self.use_force_meld(player, draw)
+                    
+                    #discards the card
+                    else:
+                        self.discard_pile.append(draw)
+                        player.hand.remove(draw)
+                    
             
                 if player.hand: #player1 discard
-                    discard = input(f"Choose a card to discard from your hand "
+                    while True:
+                        discard = input(f"Choose a card to discard from your hand "
                                     f"{player.hand}: ").strip().upper()
-                    if discard in player.hand:
-                        player.hand.remove(discard)
-                        self.discard_pile.append(discard)
-            
+                        if discard in player.hand:
+                            player.hand.remove(discard)
+                            self.discard_pile.append(discard)
+                            break
+                        else:
+                            print("Invalid card")
             else: #cpu
                 meld, used_top = player.optimal_meld(player.hand, draw)
                 if meld:
