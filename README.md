@@ -12,9 +12,10 @@ Expalnation of each file:
 Running the game:
 - Command: python conquian.py
 - terminal inputs:
-  - y/n for melding a card, if the card is not meldable the game will not let you meld the card
-  - the card you would like to meld needs to be inputed
-Clear instructions on how to run your program from the command line. You do not need to explain how to run the program on Windows and on MacOS; just pick one. If your program takes command-line arguments, please document the command-line interface (which arguments are required? which are optional, if any? what data types are you looking for? are there a specific format for data files? etc.)
+  - y/n for melding a card, if the card is not meldable the game will not let you meld the card (required)
+  - the card you would like to meld needs to be inputed (required)
+
+
 
 Clear instructions on how to use your program and/or interpret the output of the program. Anything the user might encounter while using your program that a random person on the street would not find self-explanatory needs to be explained in your instructions.
 
