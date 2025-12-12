@@ -7,7 +7,7 @@ https://www.canva.com/design/DAG7DD3Jm2s/ycKLf6tUfal2PK3Vc7MzHw/edit?utm_content
 
 Expalnation of each file:
 - conquian.py: the main file for the game
-- read.me: The
+- read.me: Document explaining the project and how the program works.
 
 Running the game:
 - Command: python conquian.py
