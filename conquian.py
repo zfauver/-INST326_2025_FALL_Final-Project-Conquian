@@ -188,7 +188,17 @@ class Player:
     # Sean Liu
     def check_if_meldable(self, current_draw, opposing_player):
         VALUES = {'A':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, 'J':8, 'Q':9, 'K':10}
-        
+
+        """
+        Checks if the current draw has meldable cards.
+
+        Args:
+            current_draw (list): The current draw of cards the user has.
+            opposing_player (list): The opposing player's melds. 
+
+        Returns:
+            boolean: True if the current draw is either a set or a sequence. False otherwise
+        """
         
         #  Loop has two checks:
         #  Is meld a set? Uses the card[0] meaning if a card is "7C", it grabs char 7. Casts meld into a set to remove
@@ -493,3 +503,4 @@ class Conquian:
 if __name__ == "__main__":
     game = Conquian()
     game.run()
+
