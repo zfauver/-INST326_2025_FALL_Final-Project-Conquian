@@ -254,10 +254,10 @@ class Player:
         melds = []
         rank = {} # Checks for sets
         
-        for c in self.hand:
-            if c[0] not in rank:
-                rank[c[0]] = []
-            rank[c[0]].append(c)
+        for rank_char, suit_char in self.hand:
+            if rank_char not in rank:
+                rank[rank_char] = []
+            rank[rank_char].append(rank_char + suit_char)
         
         for group in rank.values():
             if len(group) >= 3:
@@ -265,10 +265,10 @@ class Player:
         
         suit = {} # Checks for runs
         
-        for c in self.hand:
-            if c[1] not in suit:
-                suit[c[1]] = []
-            suit[c[1]].append(c)
+        for rank_char, suit_char in self.hand:
+            if suit_char not in suit:
+                suit[suit_char] = []
+            suit[suit_char].append(rank_char + suit_char)
         
         for group in suit.values():
             group.sort(key=lambda c: VALUES[c[0]])
@@ -591,4 +591,5 @@ if __name__ == "__main__":
     game = Conquian()
     game.run()
     
+
 
