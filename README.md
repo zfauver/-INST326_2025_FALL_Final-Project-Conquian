@@ -29,7 +29,7 @@ Attribution:
 |Method/function|Primary author|Techniques demonstrated|
 |---------------|--------------|-----------------------|
 | optimal_meld  | Baran Sayan  | Generator expression  |
-| meld_from_hand| Baran Sayan  | lambda expressions    |
+| meld_from_hand| Baran Sayan  | Sequence unpacking    |
 | check_if_meldable| Sean Liu  | List comprehension    |
 | create_deck| Zachary Fauver  | optional parameters and/or keyword arguments    |
 
