@@ -191,6 +191,21 @@ class Player:
                     return (cards, updated_melds)
         return (None, existing_melds)
 
+    def unmelded_cards(self):
+        """
+        """
+        
+        melded_cards = set()
+        for meld in self.melds:
+            for card in meld:
+                melded_cards.add(card)
+        total = 0
+        for card in self.hand:
+            if card not in melded_cards:
+                total += VALUES[card[0]]
+        
+        return total
+
     # Sean Liu
     def check_if_meldable(self, current_draw, opposing_player):
         VALUES = {'A':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, 'J':8, 'Q':9, 'K':10}
@@ -377,6 +392,7 @@ class Conquian:
         for p in self.players:
             print(f"{p.name} hand: {p.hand}")
             print(f"{p.name} melds: {p.melds}")
+            print(f"{p.name} unmelded card value: {p.unmelded_cards()}")
         print(f"Discard pile: {self.discard_pile}")
         print(f"Stock remaining: {len(self.stock)}")
     
@@ -577,3 +593,4 @@ if __name__ == "__main__":
     game = Conquian()
     game.run()
     
+
