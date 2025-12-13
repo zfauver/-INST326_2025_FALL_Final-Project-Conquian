@@ -247,7 +247,8 @@ class Player:
                         return True
 
         return False
-        
+
+    #Baran Sayan
     def meld_from_hand(self):
         """Identifies possible melds that can be made from the player's current
            hand.
@@ -597,4 +598,5 @@ if __name__ == "__main__":
     game = Conquian()
     game.run()
     
+
 
