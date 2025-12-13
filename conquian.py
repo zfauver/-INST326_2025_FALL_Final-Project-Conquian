@@ -83,7 +83,9 @@ class Player:
                 best = m
                 best_count = hand_count
         
-        return (best, top_card in best) if best_count > 0 else ([], False)
+        if best_count == 0:
+            return([], False)
+        return (best, top_card in best)
 
     # Zachary Fauver
     ##Funtion requires a helper funtion that determines if a card can be melded
@@ -107,11 +109,11 @@ class Player:
         
         #forcing opponent to meld may help them win by reducing their hand size
         # this function will only force meld if the oponent has a large hand 
-        # >=6 cards and if the player's hand is <=4 so that a meld should
-        # only be forced when wining 
+        # >=6 cards and if the player's hand is <=6 so that a meld should
+        # only be forced when winning 
         
         decision = False #default is not to force the meld unless conditions are right
-        if len(self.opponent.hand) >= 8 and len(self.hand) <=4 :
+        if len(self.opponent.hand) >= 6 and len(self.hand) <=6 :
             decision = True
         return decision
         
@@ -190,7 +192,10 @@ class Player:
         return (None, existing_melds)
 
     def unmelded_cards(self):
-        """
+        """ Calculates the value of cards that are not melded
+        
+        Returns:
+            int: the sum of all of the unmelded cards in the player's hand
         """
         
         melded_cards = set()
@@ -200,7 +205,7 @@ class Player:
         total = 0
         for card in self.hand:
             if card not in melded_cards:
-                total += VALUES[card[0]]
+                total += VALUES[card[:-1]]
         
         return total
 
@@ -254,10 +259,10 @@ class Player:
         melds = []
         rank = {} # Checks for sets
         
-        for rank_char, suit_char in self.hand:
-            if rank_char not in rank:
-                rank[rank_char] = []
-            rank[rank_char].append(rank_char + suit_char)
+        for c in self.hand:
+            if c[0] not in rank:
+                rank[c[0]] = []
+            rank[c[0]].append(c)
         
         for group in rank.values():
             if len(group) >= 3:
@@ -265,10 +270,10 @@ class Player:
         
         suit = {} # Checks for runs
         
-        for rank_char, suit_char in self.hand:
-            if suit_char not in suit:
-                suit[suit_char] = []
-            suit[suit_char].append(rank_char + suit_char)
+        for c in self.hand:
+            if c[1] not in suit:
+                suit[c[1]] = []
+            suit[c[1]].append(c)
         
         for group in suit.values():
             group.sort(key=lambda c: VALUES[c[0]])
@@ -298,7 +303,7 @@ class Conquian:
         self.players = []
         self.stock = []
 
-    def create_deck(self): #Zach F
+    def create_deck(self, shuffle=True): #Zach F
         """
         Creates and shuffles the 40 card deck, removing 8, 9, and 10
         
@@ -314,8 +319,8 @@ class Conquian:
         for s in suits:
             for r in ranks:
                 deck.append(r+s)
-        random.shuffle(deck)
-        return deck
+        if shuffle:
+            random.shuffle(deck)
         
         return deck
     
@@ -336,7 +341,7 @@ class Conquian:
         self.players = [player1, cpu]
         self.stock = self.deck[20:]
         
-  def use_force_meld(self,meldforcer,card): #Zach F
+    def use_force_meld(self,meldforcer,card): #Zach F
         """ Forces the opponent to meld a card
 
             Args:
@@ -381,7 +386,6 @@ class Conquian:
             if card in playerforced.hand:
                 playerforced.hand.remove(card)
                 
-            
                 
     def game_state(self):
         """Prints the current state of the game. (Each player's hand, melds,
@@ -592,7 +596,3 @@ if __name__ == "__main__":
     game = Conquian()
     game.run()
     
-
-
-
-
