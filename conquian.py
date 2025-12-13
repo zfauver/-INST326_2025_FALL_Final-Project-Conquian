@@ -577,9 +577,27 @@ class Conquian:
                         if self.win_condition(player):
                                 print(f"{player.name} wins!")
                                 return
+                            
+                    #if the card can be melded player cna choose to force the meld        
                     else:
-                        self.discard_pile.append(draw)
-                        print(f"CPU discarded {draw}")
+                        if player.opponent.check_if_meldable(draw, player):
+                            print(f"\n The CPU is trying to discard {draw}, but it"
+                              f"can be melded!")
+                            force_choice = input(f"Do you want to force the"
+                                             "CPU to meld {draw}? (y/n): ").strip().lower()
+                        
+                            if force_choice == 'y':
+                                self.use_force_meld(player.opponent, draw)
+                            else:
+                                self.discard_pile.append(draw)
+                                print(f"CPU discarded {draw}")
+                  
+                        #if the card cannot be forced
+                        else:
+                            self.discard_pile.append(draw)
+                            print(f"CPU discarded {draw}")
+                            self.discard_pile.append(draw)
+                            print(f"CPU discarded {draw}")
                     
                     if player.hand:
                         discard = player.hand.pop(0)
