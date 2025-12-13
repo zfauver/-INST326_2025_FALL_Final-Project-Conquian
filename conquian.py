@@ -395,7 +395,7 @@ class Conquian:
         print(f"Discard pile: {self.discard_pile}")
         print(f"Stock remaining: {len(self.stock)}")
     
-    def win_condition(self, player):
+    def win_condition(self, player): #Zach F
         """ Checks if a player has met the winning conditions
         Args:
             player(Player): The player being checked
@@ -592,6 +592,7 @@ if __name__ == "__main__":
     game = Conquian()
     game.run()
     
+
 
 
 
