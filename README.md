@@ -37,6 +37,7 @@ Attribution:
 | check_if_meldable| Sean Liu  | List comprehension    |
 | create_deck| Zachary Fauver  | optional parameters and/or keyword arguments   |
 | use_force_meld| Zachary Fauver  | f-strings containing expressions   |
+| valid_play | Amon Bayu | lambda expressions |
 
 
 
