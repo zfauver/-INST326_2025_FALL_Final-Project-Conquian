@@ -338,7 +338,7 @@ class Conquian:
         self.players = [player1, cpu]
         self.stock = self.deck[20:]
         
-    def use_force_meld(self,player,card):
+    def use_force_meld(self,player,card): #Zach F
         """ Forces the opponent to meld a card
 
             Args:
@@ -593,4 +593,3 @@ if __name__ == "__main__":
     game = Conquian()
     game.run()
     
-
