@@ -336,11 +336,11 @@ class Conquian:
         self.players = [player1, cpu]
         self.stock = self.deck[20:]
         
-    def use_force_meld(self,player,card): #Zach F
+  def use_force_meld(self,meldforcer,card): #Zach F
         """ Forces the opponent to meld a card
 
             Args:
-                player (Player): Player initiating force meld.
+                meldforcer (Player): Player initiating force meld.
                 card (str): The card that would be forced into the opponent's
                             meld.
             Side effects:
@@ -348,12 +348,12 @@ class Conquian:
                 - Removes card from player's hand if meld is successful.
                 - May modify opponent's melds by appending the card.
         """
-        opponent = player.opponent
+        playerforced = meldforcer.opponent
         melded = False
         
         #iterates through opponent melds to determine
         # where the card can be melded
-        for meld in opponent.melds:
+        for meld in playerforced.melds:
             #using the 0 index we 
             # check if the card fits within a set 
             # (A, 2-7, J,Q, or K)
@@ -377,10 +377,11 @@ class Conquian:
                     break
         if melded:
             print(f"Force meld used:\n"
-                      f"{card} was forced into {opponent.name}'s deck")
-            if card in player.hand:
-                player.hand.remove(card)
+                      f"{card} was forced into {playerforced.name}'s deck")
+            if card in playerforced.hand:
+                playerforced.hand.remove(card)
                 
+            
                 
     def game_state(self):
         """Prints the current state of the game. (Each player's hand, melds,
@@ -591,5 +592,6 @@ if __name__ == "__main__":
     game = Conquian()
     game.run()
     
+
 
 
