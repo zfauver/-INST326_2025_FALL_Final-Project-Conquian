@@ -35,6 +35,7 @@ Attribution:
 | optimal_meld  | Baran Sayan  | Generator expression  |
 | meld_from_hand| Baran Sayan  | Sequence unpacking    |
 | check_if_meldable| Sean Liu  | List comprehension    |
+| game_state | Sean Liu | Instance Attributes
 | create_deck| Zachary Fauver  | optional parameters and/or keyword arguments   |
 | use_force_meld| Zachary Fauver  | f-strings containing expressions   |
 | valid_play | Amon Bayu | lambda expressions |
